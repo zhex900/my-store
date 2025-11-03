@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FakeStore E-Commerce (REST)</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 
+    <script src="https://js.stripe.com/v3/"></script> -->
+
+    <style>
+      /* Custom class for the cart sidebar animation */
+      .cart-open {
+        transform: translateX(0) !important;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100 font-sans">
+    <header class="bg-white shadow-md sticky top-0 z-20">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16"
+      >
+        <h1 class="text-3xl font-extrabold text-indigo-600">My Store 🛍️</h1>
+
+        <button
+          id="open-cart-btn"
+          class="relative p-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 transition duration-150"
+        >
+          🛒
+          <span
+            id="cart-count"
+            class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full"
+            >0</span
+          >
+        </button>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto py-8 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">Featured Products</h2>
+
+      <div class="mb-4">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search products by title..."
+          class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-150"
+        />
+      </div>
+
+      <div class="mb-8 flex justify-end">
+        <select
+          id="sort-select"
+          class="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition duration-150"
+        >
+          <option value="default">Sort By: Featured</option>
+          <option value="name-asc">Name (A-Z)</option>
+          <option value="price-asc">Price (Low to High)</option>
+          <option value="price-desc">Price (High to Low)</option>
+        </select>
+      </div>
+      <div
+        id="product-grid"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"
+      >
+        <p class="col-span-full text-center text-gray-500">
+          Loading products...
+        </p>
+      </div>
+    </main>
+
+    <div
+      id="cart-sidebar"
+      class="fixed top-0 right-0 w-full md:w-96 h-full bg-white shadow-2xl z-30 transform translate-x-full transition-transform duration-300 ease-in-out p-6 flex flex-col"
+    >
+      <div class="flex justify-between items-center border-b pb-4 mb-4">
+        <h3 class="text-2xl font-bold">Your Cart</h3>
+        <button
+          id="close-cart-btn"
+          class="text-gray-500 hover:text-gray-900 text-4xl leading-none"
+        >
+          &times;
+        </button>
+      </div>
+
+      <div id="cart-items" class="flex-grow overflow-y-auto space-y-4">
+        <p id="empty-cart-message" class="text-gray-500 text-center hidden">
+          Your cart is empty.
+        </p>
+      </div>
+
+      <div class="mt-6 pt-4 border-t">
+        <div
+          class="flex justify-between items-center text-xl font-semibold mb-4"
+        >
+          <span>Total:</span>
+          <span id="cart-total">$0.00</span>
+        </div>
+
+        <button
+          id="checkout-btn"
+          class="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition duration-150 disabled:opacity-50"
+          disabled
+        >
+          Proceed to Checkout
+        </button>
+        <p id="checkout-note" class="text-xs text-red-500 mt-2 text-center">
+          🚨 Requires a backend server for secure Stripe Checkout.
+        </p>
+      </div>
+    </div>
+
+    <div
+      id="cart-overlay"
+      class="fixed inset-0 bg-black opacity-0 pointer-events-none transition-opacity duration-300 z-20"
+    ></div>
+
+    <script src="./exercise/script.js"></script>
+  </body>
+</html>
