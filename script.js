@@ -2,7 +2,7 @@
 // Stripe's public test key (safe to use on the client)
 const STRIPE_PUBLIC_KEY = "pk_test_TYooMQhupHostV8GrpRvmbZz";
 // REST API Endpoint for product listing
-const REST_API_ENDPOINT = "https://fakestoreapi.com/products";
+const REST_API_ENDPOINT = "/api/products";
 
 // --- Global State ---
 let products = [];

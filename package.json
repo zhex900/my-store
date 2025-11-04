@@ -3,12 +3,19 @@
   "version": "1.0.0",
   "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx netlify dev",
+    "functions": "npx netlify functions:serve"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "netlify-cli": "^23.9.5",
     "serve": "^14.2.5"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "serverless-http": "^3.2.0"
   }
 }
