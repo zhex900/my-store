@@ -27,19 +27,19 @@ router.post("/checkout/session", async (req, res) => {
     } else {
       return res.status(400).json({ error: "Provide priceId or lineItems[]" });
     }
-
+    console.log(process.env.DEPLOY_PRIME_URL, "DEPLOY_PRIME_URL");
+    console.log(process.env.DEPLOY_URL, "DEPLOY_URL");
+    console.log(process.env.URL, "URL");
     const session = await stripe.checkout.sessions.create({
       mode,
       line_items: items,
       success_url:
         successUrl ||
         process.env.STRIPE_SUCCESS_URL ||
-        process.env.DEPLOY_PRIME_URL + "/success" ||
         "http://localhost:8888/success",
       cancel_url:
         cancelUrl ||
         process.env.STRIPE_CANCEL_URL ||
-        process.env.DEPLOY_PRIME_URL + "/cancel" ||
         "http://localhost:8888/cancel",
       customer_email: customerEmail,
       billing_address_collection: "auto",
