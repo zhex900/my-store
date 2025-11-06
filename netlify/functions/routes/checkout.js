@@ -34,10 +34,12 @@ router.post("/checkout/session", async (req, res) => {
       success_url:
         successUrl ||
         process.env.STRIPE_SUCCESS_URL ||
+        process.env.DEPLOY_PRIME_URL + "/success" ||
         "http://localhost:8888/success",
       cancel_url:
         cancelUrl ||
         process.env.STRIPE_CANCEL_URL ||
+        process.env.DEPLOY_PRIME_URL + "/cancel" ||
         "http://localhost:8888/cancel",
       customer_email: customerEmail,
       billing_address_collection: "auto",
