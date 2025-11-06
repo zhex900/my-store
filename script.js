@@ -1,6 +1,5 @@
 // --- Configuration ---
 // Stripe's public test key (safe to use on the client)
-const STRIPE_PUBLIC_KEY = "pk_test_TYooMQhupHostV8GrpRvmbZz";
 // REST API Endpoint for product listing
 const REST_API_ENDPOINT = "/api/products";
 
@@ -311,7 +310,7 @@ const closeCart = () => toggleCart(false);
 // --- Stripe Checkout Integration (Client-Side Implementation) ---
 
 /**
- * Initiates the Stripe checkout process.
+ * Initiates Stripe Checkout by calling our backend and redirecting to session.url
  */
 async function handleCheckout() {
   if (cart.length === 0) {
@@ -322,57 +321,41 @@ async function handleCheckout() {
   checkoutBtn.textContent = "Processing...";
   checkoutBtn.disabled = true;
 
-  // --- CRITICAL SECURITY NOTE ---
-  // The actual Stripe Checkout Session creation MUST happen on a secure server.
-  // You CANNOT pass item details directly to the client-side Stripe object for Checkout Session creation.
-  // The code below simulates the process and explains the required backend step.
-
-  alert(
-    "🚨 ACTION REQUIRED: A real, secure checkout requires a **backend server** to call the Stripe API and create a 'Checkout Session ID'. We will now simulate the final client-side redirect step."
-  );
-
   try {
-    // 1. Prepare Line Items for the *hypothetical* backend
+    // Build Stripe Checkout-compatible line_items using price_data
     const lineItems = cart.map((item) => ({
-      // This structure is what your backend would receive
-      // and use to create the real Stripe Checkout Session line items.
-      name: item.title,
-      image: item.image,
-      amount: Math.round(item.price * 100), // Stripe requires amount in cents
+      price_data: {
+        currency: "aud",
+        product_data: {
+          name: item.title,
+          images: [item.image],
+        },
+        unit_amount: Math.round(item.price * 100),
+      },
       quantity: item.quantity,
     }));
 
-    // 2. MOCK: Call the hypothetical server endpoint
+    const response = await fetch("/api/checkout/session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ lineItems, mode: "payment" }),
+    });
 
-    /* // Example of what a real fetch call to your server would look like:
-        const response = await fetch('/create-checkout-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ lineItems, currency: 'usd' }),
-        });
-        const session = await response.json();
-        const sessionId = session.id; 
-        
-        // 3. Real Redirect with server-generated ID
-        const { error } = await stripe.redirectToCheckout({
-             sessionId: sessionId,
-        });
-        */
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${response.status}`);
+    }
 
-    // Since we don't have a backend, we just log and inform the user:
-    console.log("Mock Line Items ready for backend:", lineItems);
-    console.warn(
-      "Stripe Checkout was initiated but requires a server-generated session ID to complete securely. The redirect step is simulated."
-    );
+    const data = await response.json();
+    if (!data || !data.url) {
+      throw new Error("Invalid response from checkout session API");
+    }
 
-    alert(
-      "Mock checkout simulation complete. The next step is implementing a backend to generate the Checkout Session ID."
-    );
+    // Redirect to Stripe-hosted Checkout
+    window.location.href = data.url;
   } catch (error) {
     console.error("Checkout error:", error);
-    alert(
-      "Checkout failed: " + error.message + ". Check console for security note."
-    );
+    alert("Checkout failed: " + (error?.message || String(error)));
   } finally {
     checkoutBtn.textContent = "Proceed to Checkout";
     checkoutBtn.disabled = false;

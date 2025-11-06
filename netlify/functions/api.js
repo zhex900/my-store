@@ -4,10 +4,11 @@ import routes from "./routes/index.js";
 
 const app = express();
 
-app.use("/api/", routes);
-
-//middleware in Express that allows your server to
-//parse incoming requests with JSON payloads.
+// Parse JSON bodies before routes
 app.use(express.json());
+
+// Mount routes so both direct function path and /api/* work locally
+app.use("/.netlify/functions/api", routes);
+app.use("/api/", routes);
 
 export const handler = serverless(app);

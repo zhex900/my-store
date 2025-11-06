@@ -2,7 +2,7 @@
   publish = "."
 
 [functions]
-  external_node_modules = ["express"]
+  external_node_modules = ["express", "stripe"]
   node_bundler = "esbuild"
   
 [[redirects]]
